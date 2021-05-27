@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { Product, Category, Tag, ProductTag } = require("../../models");
+const { afterSync } = require("../../models/ProductTag");
 
 // The `/api/products` endpoint
 
@@ -8,11 +9,7 @@ router.get("/", async (req, res) => {
   // find all products
   try {
     const productData = await Product.findAll({
-      include: [
-        { model: Category, as: "Product" },
-        { model: Tag, as: "Product" },
-        { model: ProductTag, as: "Product" },
-      ],
+      include: [{ model: Category }, { model: Tag }],
     });
     res.status(200).json(productData);
   } catch (err) {
@@ -26,8 +23,14 @@ router.get("/:id", async (req, res) => {
   // find a single product by its `id`
   try {
     const productID = await Product.findByPk(req.params.id, {
-      include: [{ model: Category }, { model: Tag }, { model: ProductTag }],
+      include: [{ model: Tag }, { model: Category }],
     });
+    console.log(productID);
+    if (!productID) {
+      res.status(404).json({ message: "No product with that id!" });
+      return;
+    }
+    res.status(200).json(productID);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -45,7 +48,7 @@ router.post("/", (req, res) => {
       tagIds: [1, 2, 3, 4]
     }
   */
-  Product.create(req.body)
+  Product.create(req.body, { include: [{ model: Category }, { model: Tag }] })
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
       if (req.body.tagIds.length) {
@@ -109,8 +112,19 @@ router.put("/:id", (req, res) => {
     });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   // delete one product by its `id` value
+  try {
+    const delProduct = await Product.destroy({
+      include: [{ model: Category }, { model: Tag }],
+      where: {
+        id: req.params.id,
+      },
+    });
+    res.status(200).json(delProduct);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;
