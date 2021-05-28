@@ -25,7 +25,7 @@ Once you have started the server, you can use a tool such as Insomnia to test re
 
 ## Demo Video
 
-https://drive.google.com/file/d/1SXCOdo-dAx3SY8sF70reLyjED3Jrmlf3/view?usp=sharing
+https://drive.google.com/file/d/1-JNpRTrlKzbAziy493GKUMBVLwuEXkKz/view?usp=sharing
 
 ## Credits
 
