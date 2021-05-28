@@ -54,7 +54,12 @@ router.post("/", (req, res) => {
       tagIds: [1, 2, 3, 4]
     }
   */
-  Product.create(req.body)
+  Product.create(req.body, {
+    include: [
+      { model: Tag, through: ProductTag, as: "tag_id" },
+      { model: Category },
+    ],
+  })
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
       if (req.body.tagIds.length) {
@@ -80,6 +85,10 @@ router.post("/", (req, res) => {
 router.put("/:id", async (req, res) => {
   // update product data
   await Product.update(req.body, {
+    include: [
+      { model: Tag, through: ProductTag, as: "tag_id" },
+      { model: Category },
+    ],
     where: {
       id: req.params.id,
     },
