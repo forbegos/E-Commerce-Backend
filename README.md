@@ -33,7 +33,7 @@ Fernando de Orbegoso
 
 ## Github Repository
 
-https://www.github.com/https://github.com/forbegos/E-Commerce-Backend
+https://github.com/forbegos/E-Commerce-Backend
 
 ## Contact Information
 
