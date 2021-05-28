@@ -2,7 +2,8 @@
 
 ## Description
 
-This project was built Understand CRUD requests using Sequelize and MySQL. This projects solves the problem of allows to create a mock e-commerce MySQL database and test CRUD requests using Sequelize libraries via the Insomnia application.
+This project was built Understand CRUD requests using Sequelize and MySQL. This projects allows the creation of a mock e-commerce MySQL database to test CRUD requests using Sequelize libraries via the Insomnia application.
+
 During the development of this project, one of the things I learned was how to create CRUD routes, connect to a database and execute requests against that database. Another concept learned in this project was the concept of table associations in databases.
 
 ## Table of Contents
