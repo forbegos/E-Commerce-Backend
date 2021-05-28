@@ -9,7 +9,10 @@ router.get("/", async (req, res) => {
   // find all products
   try {
     const productData = await Product.findAll({
-      include: [{ model: Category }, { model: Tag }],
+      include: [
+        { model: Category },
+        { model: Tag, through: ProductTag, as: "tag_id" },
+      ],
     });
     res.status(200).json(productData);
   } catch (err) {
@@ -23,7 +26,10 @@ router.get("/:id", async (req, res) => {
   // find a single product by its `id`
   try {
     const productID = await Product.findByPk(req.params.id, {
-      include: [{ model: Tag }, { model: Category }],
+      include: [
+        { model: Tag, through: ProductTag, as: "tag_id" },
+        { model: Category },
+      ],
     });
     console.log(productID);
     if (!productID) {
@@ -48,7 +54,7 @@ router.post("/", (req, res) => {
       tagIds: [1, 2, 3, 4]
     }
   */
-  Product.create(req.body, { include: [{ model: Category }, { model: Tag }] })
+  Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
       if (req.body.tagIds.length) {
@@ -71,15 +77,14 @@ router.post("/", (req, res) => {
 });
 
 // update product
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   // update product data
-  Product.update(req.body, {
+  await Product.update(req.body, {
     where: {
       id: req.params.id,
     },
   })
     .then((product) => {
-      // find all associated tags from ProductTag
       return ProductTag.findAll({ where: { product_id: req.params.id } });
     })
     .then((productTags) => {
@@ -116,7 +121,6 @@ router.delete("/:id", async (req, res) => {
   // delete one product by its `id` value
   try {
     const delProduct = await Product.destroy({
-      include: [{ model: Category }, { model: Tag }],
       where: {
         id: req.params.id,
       },
